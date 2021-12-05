@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import DayPickerInput from 'react-day-picker/types/DayPickerInput';
-import "react-day-picker/lib/style.css"
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import "react-day-picker/lib/style.css";
+import dateFnsFormat from 'date-fns/format';
+
 
 function AddTask({ onCancel, onAddTask }) {
     const [task, setTask] = useState("");
