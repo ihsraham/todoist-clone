@@ -20,9 +20,10 @@ function AddTask({ onCancel, onAddTask }) {
             <div className="add-task-actions-container">
                 <div className="btns-container">
                     <button 
+                        disabled={!task}
                         className="add-btn"
                         onClick={() => {
-                            onAddTask(task);
+                            onAddTask(task, date);
                             onCancel();
                             setTask("");
                         }}
@@ -63,8 +64,9 @@ function Tasks() {
     const [showAddTask, setShowAddTask] = useState(false);
     const [tasks, setTasks] = useState([]);
 
-    function addNewTask(task) {
-        setTasks(prevState => [...prevState, task]);
+    function addNewTask(text, date) {
+        const newTaskItem = {text , date: date || new Date()};
+        setTasks(prevState => [...prevState, newTaskItem]);
     }
 
     return (
@@ -85,7 +87,11 @@ function Tasks() {
             }
             {tasks.length > 0 ? 
             tasks.map(task => (
-                <p>{task}</p>
+                <p>
+                    {task.text}
+                    {" "}
+                    {dateFnsFormat(new Date(task.date), FORMAT)}
+                </p>
             )) : <p>No tasks yet</p>}
         </div>
     )
