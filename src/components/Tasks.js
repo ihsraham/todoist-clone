@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import
+import DayPickerInput from 'react-day-picker/types/DayPickerInput';
+import "react-day-picker/lib/style.css"
 
 function AddTask({ onCancel, onAddTask }) {
     const [task, setTask] = useState("");
