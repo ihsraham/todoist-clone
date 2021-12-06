@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import "react-day-picker/lib/style.css";
 import dateFnsFormat from 'date-fns/format';
+import isAfter from 'date-fns/isAfter';
+import isBefore from 'date-fns/isBefore';
+import addDays from 'date-fns/addDays';
+import isToday from 'date-fns/isToday';
 
 const FORMAT = 'dd/MM/yyyy';
 function formatDate(date, format, locale) {
@@ -58,9 +62,45 @@ function AddTask({ onCancel, onAddTask }) {
     )
 };
 
+const TASKS_HEADER_MAPPING = {
+    INBOX: "Inbox",
+    TODAY: "Today",
+    NEXT_7: "Next 7 days",
+}
 
+function TaskItems({ selectedTab, tasks }) {
+    if(selectedTab === "NEXT_7") {
+        return tasks
+        .filter(task => 
+            isAfter(task.date, new Date()) && 
+            isBefore(task.date, addDays(new Date(), 7))
+            )
+            .map((task) => (
+                <p>
+                    {task.text} {dateFnsFormat(new Date(task.date), FORMAT)}{" "}
+                </p>
+            ));
+    }
 
-function Tasks() {
+    if(selectedTab === "TODAY") {
+        return tasks
+        .filter(task => isToday(task.date))
+            .map((task) => (
+                <p>
+                    {task.text} {dateFnsFormat(new Date(task.date), FORMAT)}{" "}
+                </p>
+            ));
+    }
+
+    return tasks
+            .map((task) => (
+                <p>
+                    {task.text} {dateFnsFormat(new Date(task.date), FORMAT)}{" "}
+                </p>
+            ));
+}
+
+function Tasks({ selectedTab }) {
     const [showAddTask, setShowAddTask] = useState(false);
     const [tasks, setTasks] = useState([]);
 
@@ -71,7 +111,7 @@ function Tasks() {
 
     return (
         <div className="tasks">
-            <h1>Inbox</h1>
+            <h1>{TASKS_HEADER_MAPPING[selectedTab]}</h1>
             <div 
                 className="add-task-btn" 
                 onClick={() => setShowAddTask((prevState) => !prevState)}
@@ -86,13 +126,8 @@ function Tasks() {
                 )
             }
             {tasks.length > 0 ? 
-            tasks.map(task => (
-                <p>
-                    {task.text}
-                    {" "}
-                    {dateFnsFormat(new Date(task.date), FORMAT)}
-                </p>
-            )) : <p>No tasks yet</p>}
+            <TaskItems tasks={tasks} selectedTab={selectedTab} /> : 
+            <p>No tasks yet</p>}
         </div>
     )
 };
