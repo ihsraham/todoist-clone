@@ -69,35 +69,29 @@ const TASKS_HEADER_MAPPING = {
 }
 
 function TaskItems({ selectedTab, tasks }) {
+    let tasksToRender = [...tasks];
     if(selectedTab === "NEXT_7") {
-        return tasks
-        .filter(task => 
-            isAfter(task.date, new Date()) && 
-            isBefore(task.date, addDays(new Date(), 7))
-            )
-            .map((task) => (
-                <p>
-                    {task.text} {dateFnsFormat(new Date(task.date), FORMAT)}{" "}
-                </p>
-            ));
+        tasksToRender = tasks.filter(
+            (task) => 
+                isAfter(task.date, new Date()) && 
+                isBefore(task.date, addDays(new Date(), 7))
+        );
     }
 
     if(selectedTab === "TODAY") {
-        return tasks
-        .filter(task => isToday(task.date))
-            .map((task) => (
-                <p>
-                    {task.text} {dateFnsFormat(new Date(task.date), FORMAT)}{" "}
-                </p>
-            ));
+        tasksToRender = tasks.filter(task => isToday(task.date));
     }
 
-    return tasks
-            .map((task) => (
-                <p>
-                    {task.text} {dateFnsFormat(new Date(task.date), FORMAT)}{" "}
-                </p>
-            ));
+    return (
+        <div className="task-items-container">
+            {tasksToRender.map((task) => (
+                <div className="task-item">
+                    <p>{task.text}</p>
+                    <p>{dateFnsFormat(new Date(task.date), FORMAT)}</p>
+                </div>
+            ))}
+        </div>
+    );
 }
 
 function Tasks({ selectedTab }) {
