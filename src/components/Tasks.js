@@ -112,13 +112,13 @@ function Tasks({ selectedTab }) {
     return (
         <div className="tasks">
             <h1>{TASKS_HEADER_MAPPING[selectedTab]}</h1>
-            <div 
+            {selectedTab === "INBOX" ? <div 
                 className="add-task-btn" 
                 onClick={() => setShowAddTask((prevState) => !prevState)}
             >
                 <span className="plus">+</span>
                 <span className="add-task-text">Add Task</span>
-            </div>
+            </div> : null}
             {showAddTask && (
                 <AddTask 
                     onAddTask={addNewTask} 
